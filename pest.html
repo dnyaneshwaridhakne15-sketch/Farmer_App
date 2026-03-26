@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+
+<title>Pest Scanner</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #e8f5e9;
+  text-align: center;
+}
+
+h2 {
+  color: green;
+}
+
+img {
+  margin-top: 10px;
+  width: 200px;
+  height: auto;
+  border-radius: 10px;
+}
+
+button {
+  padding: 10px;
+  margin-top: 10px;
+  background: green;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+input {
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<h2 id="title">Pest & Disease Scanner</h2>
+
+<input type="file" id="imageInput" accept="image/*"><br>
+
+<img id="preview" style="display:none;">
+
+<p id="result"></p>
+
+<button onclick="scanImage()" id="scanBtn">Scan</button>
+
+<br><br>
+<button onclick="goBack()" id="backBtn">⬅ Back</button>
+
+<script>
+
+/* Language Data */
+const data = {
+  en: {
+    title: "Pest & Disease Scanner",
+    scan: "Scan",
+    result: "Detected: Leaf Disease (Demo)",
+    back: "Back"
+  },
+  mr: {
+    title: "किड व रोग स्कॅनर",
+    scan: "स्कॅन करा",
+    result: "आढळले: पानांचा रोग (डेमो)",
+    back: "मागे"
+  },
+  hi: {
+    title: "कीट और रोग स्कैनर",
+    scan: "स्कैन करें",
+    result: "पहचाना गया: पत्ती रोग (डेमो)",
+    back: "वापस"
+  }
+};
+
+/* Load language */
+let lang = localStorage.getItem("lang") || "en";
+
+function loadLang() {
+  document.getElementById("title").textContent = data[lang].title;
+  document.getElementById("scanBtn").textContent = data[lang].scan;
+  document.getElementById("backBtn").textContent = "⬅ " + data[lang].back;
+}
+
+/* Show image preview */
+document.getElementById("imageInput").addEventListener("change", function(event) {
+  let file = event.target.files[0];
+  
+  if (file) {
+    let img = document.getElementById("preview");
+    img.src = URL.createObjectURL(file);
+    img.style.display = "block";
+    
+    // ✅ AUTO SCAN
+    scanImage();
+  }
+});
+
+/* Scan (Demo AI) */
+function scanImage() {
+  document.getElementById("result").textContent = data[lang].result;
+}
+
+/* Back button */
+function goBack() {
+  window.location.href = "features.html";
+}
+
+/* Load page */
+window.onload = function() {
+  loadLang();
+};
+
+</script>
+
+</body>
+</html>

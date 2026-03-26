@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>Live Market Price</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #e8f5e9;
+  text-align: center;
+}
+
+h2 {
+  color: green;
+}
+
+table {
+  margin: auto;
+  border-collapse: collapse;
+  width: 90%;
+  background: white;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+th {
+  background: green;
+  color: white;
+}
+</style>
+</head>
+
+<body>
+
+<h2 id="title">Live Market Prices (Maharashtra)</h2>
+
+<table>
+<thead>
+<tr>
+<th id="item">Item</th>
+<th id="price">Price (₹/kg)</th>
+</tr>
+</thead>
+
+<tbody id="tableData"></tbody>
+
+</table>
+<br><br>
+<button onclick="goBack()" id="backBtn">⬅ Back</button>
+
+<script>
+
+/* DATA (30 items) */
+const data = {
+  en: {
+    title: "Live Market Prices (Maharashtra)",
+    item: "Item",
+    price: "Price (₹/kg)",
+    back:"Back",
+    products: [
+      ["Tomato",30],["Potato",25],["Onion",20],["Cabbage",25],["Carrot",35],
+      ["Brinjal",40],["Spinach",20],["Cauliflower",30],["Peas",50],["Chili",60],
+
+      ["Apple",120],["Banana",40],["Mango",80],["Orange",70],["Papaya",50],
+      ["Grapes",90],["Pineapple",60],["Guava",40],["Pomegranate",110],["Watermelon",30],
+
+      ["Rice",60],["Wheat",50],["Toor Dal",120],["Chana Dal",90],["Moong Dal",110],
+      ["Urad Dal",130],["Masoor Dal",100],["Soybean",70],["Groundnut",80],["Corn",40]
+    ]
+  },
+
+  mr: {
+    title: "महाराष्ट्र थेट बाजार भाव",
+    item: "उत्पादन",
+    price: "भाव (₹/किलो)",
+    back: "मागे",
+    products: [
+      ["टोमॅटो",30],["बटाटा",25],["कांदा",20],["कोबी",25],["गाजर",35],
+      ["वांगी",40],["पालक",20],["फुलकोबी",30],["मटार",50],["मिरची",60],
+
+      ["सफरचंद",120],["केळी",40],["आंबा",80],["संत्रे",70],["पपई",50],
+      ["द्राक्षे",90],["अननस",60],["पेरू",40],["डाळिंब",110],["कलिंगड",30],
+
+      ["तांदूळ",60],["गहू",50],["तूर डाळ",120],["चना डाळ",90],["मूग डाळ",110],
+      ["उडीद डाळ",130],["मसूर डाळ",100],["सोयाबीन",70],["शेंगदाणे",80],["मका",40]
+    ]
+  },
+
+  hi: {
+    title: "महाराष्ट्र लाइव बाजार भाव",
+    item: "वस्तु",
+    price: "भाव (₹/किलो)",
+    back: "वापस",
+    products: [
+      ["टमाटर",30],["आलू",25],["प्याज",20],["पत्ता गोभी",25],["गाजर",35],
+      ["बैंगन",40],["पालक",20],["फूलगोभी",30],["मटर",50],["मिर्च",60],
+
+      ["सेब",120],["केला",40],["आम",80],["संतरा",70],["पपीता",50],
+      ["अंगूर",90],["अनानास",60],["अमरूद",40],["अनार",110],["तरबूज",30],
+
+      ["चावल",60],["गेहूं",50],["तूर दाल",120],["चना दाल",90],["मूंग दाल",110],
+      ["उड़द दाल",130],["मसूर दाल",100],["सोयाबीन",70],["मूंगफली",80],["मक्का",40]
+    ]
+  }
+};
+
+/* Load language */
+let lang = localStorage.getItem("lang") || "en";
+
+function loadData() {
+  document.getElementById("title").textContent = data[lang].title;
+  document.getElementById("item").textContent = data[lang].item;
+  document.getElementById("price").textContent = data[lang].price;
+  document.getElementById("backBtn").textContent = data[lang].back;
+
+  let table = document.getElementById("tableData");
+  table.innerHTML = "";
+  
+
+  data[lang].products.forEach(p => {
+    table.innerHTML += `<tr><td>${p[0]}</td><td>${p[1]}</td></tr>`;
+  });
+}
+
+/* Notification simulation */
+function checkPriceChange() {
+  alert("📢 Price Updated!");
+}
+
+/* Load page */
+window.onload = function() {
+  loadData();
+
+  // simulate notification every 10 sec
+  setInterval(checkPriceChange, 10000);
+};
+function goBack() {
+  window.location.href = "features.html";
+}
+</script>
+
+</body>
+</html>

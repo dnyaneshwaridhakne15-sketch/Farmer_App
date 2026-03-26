@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8"> <!-- ✅ IMPORTANT FIX -->
+
+  <title>Farmer Marketing App</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #e8f5e9;
+      text-align: center;
+    }
+
+    h2 {
+      color: green;
+    }
+
+    .lang button {
+      margin: 5px;
+      padding: 8px 12px;
+      background: green;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      padding: 20px;
+    }
+
+    button {
+      padding: 15px;
+      background: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2 id="title">Farmer Marketing App</h2>
+
+<div class="lang">
+  <button onclick="setLang('en')">English</button>
+  <button onclick="setLang('mr')">मराठी</button>
+  <button onclick="setLang('hi')">हिंदी</button>
+</div>
+
+<div class="container">
+  <button id="market" onclick="goToPage()">Live Market Price</button>
+  <button id="chat" onclick="goToChat()">Farmer Communication</button>
+  <button id="pest" onclick="goToPest()">Pest & Disease Scanner</button>
+  <button id="expense" onclick="goToExpense()">Expense Tracker</button>
+  <button id="crop" onclick="goToCrop()">Crop Information</button>
+</div>
+
+<script>
+
+const data = {
+  en: {
+    title: "Farmer Marketing App",
+    market: "Live Market Price",
+    chat: "Farmer Communication",
+    pest: "Pest & Disease Scanner",
+    expense: "Expense Tracker",
+    crop: "Crop Information"
+  },
+  mr: {
+    title: "शेतकरी मार्केटिंग अ‍ॅप",
+    market: "लाईव्ह बाजार भाव",
+    chat: "शेतकरी संवाद",
+    pest: "किड व रोग स्कॅनर",
+    expense: "खर्च ट्रॅकर",
+    crop: "पिक माहिती"
+  },
+  hi: {
+    title: "किसान मार्केटिंग ऐप",
+    market: "लाइव बाजार भाव",
+    chat: "किसान संवाद",
+    pest: "कीट और रोग स्कैनर",
+    expense: "खर्च ट्रैकर",
+    crop: "फसल जानकारी"
+  }
+};
+
+function setLang(lang) {
+  localStorage.setItem("lang", lang);
+  document.getElementById("title").textContent = data[lang].title;
+  document.getElementById("market").textContent = data[lang].market;
+  document.getElementById("chat").textContent = data[lang].chat;
+  document.getElementById("pest").textContent = data[lang].pest;
+  document.getElementById("expense").textContent = data[lang].expense;
+  document.getElementById("crop").textContent = data[lang].crop;
+}
+
+/* Default English */
+window.onload = function() {
+  setLang("en");
+  
+};
+
+/* Navigation */
+function goToPage() {
+  window.location.href = "live-price.html";
+}
+function goToChat() {
+  window.location.href = "chat.html";
+}
+function goToPest() {
+  window.location.href = "pest.html";
+}
+function goToExpense() {
+  window.location.href = "expense.html";
+}
+function goToCrop() {
+  window.location.href = "crop.html";
+}
+</script>
+
+
+
+<html>
+<head>
+  <title>Farmer Marketing App</title>
+  <style>
+    body { font-family: Arial; background: #f1f8e9; padding: 20px; }
+    h1 { color: green; }
+    #cropList div { background: #fff; padding: 10px; margin: 10px 0; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+    input { margin: 5px; padding: 5px; }
+    button { padding: 5px 10px; background: green; color: #fff; border: none; border-radius: 3px; cursor: pointer; }
+    select { padding: 5px; margin: 5px; }
+  </style>
+</head>
+<body>
+
+  <h1>Welcome to Farmer Marketing App</h1>
+
+  <!-- Authentication -->
+  <h2>Login / Signup</h2>
+  <input type="email" id="signupEmail" placeholder="Enter email">
+  <input type="password" id="signupPassword" placeholder="Enter password">
+  <button id="signupBtn">Sign Up</button>
+  <br><br>
+  <input type="email" id="loginEmail" placeholder="Enter email">
+  <input type="password" id="loginPassword" placeholder="Enter password">
+  <button id="loginBtn">Log In</button>
+  <button id="logoutBtn" style="display:none;">Log Out</button>
+
+  <!-- Language selection -->
+  <h2>Select Language:</h2>
+  <select id="language">
+    <option value="en">English</option>
+    <option value="hi">Hindi</option>
+    <option value="mr">Marathi</option>
+  </select>
+
+  <!-- Add Crop -->
+  <h2 id="addCropLabel">Add New Crop</h2>
+  <input type="text" id="cropName" placeholder="Enter crop name">
+  <input type="number" id="cropPrice" placeholder="Enter crop price">
+  <button id="addCropBtn">Add Crop</button>
+
+  <!-- Search Crop -->
+  <h2 id="searchLabel">Search Crops</h2>
+  <input type="text" id="searchCrop" placeholder="Enter crop name to search">
+
+  <!-- Crop list -->
+  <h2 id="cropInfoLabel">Crop Information</h2>
+  <div id="cropList"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, getDocs, addDoc, doc as docRef, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    // 🔹 Firebase Config (replace with your own)
+    const firebaseConfig = {
+       apiKey: "AIzaSyCxnZ88ixV9Oi3-laN8T-DKiSc3IegNZ3s",
+   authDomain: "farmerapp-e098a.firebaseapp.com",
+   projectId: "farmerapp-e098a",
+   storageBucket: "farmerapp-e098a.firebasestorage.app",
+   messagingSenderId: "42230324667",
+   appId: "1:42230324667:web:28d02ffab67bac2611f89e",
+   measurementId: "G-1KRYMYHJGH"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // 🔹 Multilingual text
+    const languageSelect = document.getElementById("language");
+    const texts = {
+      en: { addCrop: "Add New Crop", cropName: "Enter crop name", cropPrice: "Enter crop price", addButton: "Add Crop", search: "Search Crops", searchPlaceholder: "Enter crop name to search", cropInfo: "Crop Information" },
+      hi: { addCrop: "नया फसल जोड़ें", cropName: "फसल का नाम दर्ज करें", cropPrice: "फसल की कीमत दर्ज करें", addButton: "फसल जोड़ें", search: "फसल खोजें", searchPlaceholder: "खोजने के लिए फसल का नाम दर्ज करें", cropInfo: "फसल की जानकारी" },
+      mr: { addCrop: "नवीन पीक जोडा", cropName: "पीकाचे नाव लिहा", cropPrice: "पीकाची किंमत लिहा", addButton: "पीक जोडा", search: "पीक शोधा", searchPlaceholder: "शोधण्यासाठी पीकाचे नाव लिहा", cropInfo: "पीक माहिती" }
+    };
+
+    function updateLanguage(lang) {
+      document.querySelector("h2#addCropLabel").innerText = texts[lang].addCrop;
+      document.getElementById("cropName").placeholder = texts[lang].cropName;
+      document.getElementById("cropPrice").placeholder = texts[lang].cropPrice;
+      document.getElementById("addCropBtn").innerText = texts[lang].addButton;
+      document.querySelector("h2#searchLabel").innerText = texts[lang].search;
+      document.getElementById("searchCrop").placeholder = texts[lang].searchPlaceholder;
+      document.querySelector("h2#cropInfoLabel").innerText = texts[lang].cropInfo;
+    }
+
+    languageSelect.addEventListener("change", () => updateLanguage(languageSelect.value));
+    updateLanguage("en"); // default language
+
+    // 🔹 Authentication
+    const signupBtn = document.getElementById("signupBtn");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    signupBtn.addEventListener("click", () => {
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPassword").value;
+      if(!email || !password) { alert("Enter both email and password"); return; }
+
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => { alert("Signup successful!"); })
+        .catch(error => { alert("Error: " + error.message); });
+    });
+
+    loginBtn.addEventListener("click", () => {
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+      if(!email || !password) { alert("Enter both email and password"); return; }
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => { 
+          alert("Login successful!");
+          logoutBtn.style.display = "inline";
+        })
+        .catch(error => { alert("Error: " + error.message); });
+    });
+
+    logoutBtn.addEventListener("click", () => {
+      signOut(auth).then(() => {
+        alert("Logged out!");
+        logoutBtn.style.display = "none";
+      });
+    });
+
+    onAuthStateChanged(auth, user => {
+      logoutBtn.style.display = user ? "inline" : "none";
+    });
+
+    // 🔹 Load crops from Firestore
+    async function getData() {
+      const cropList = document.getElementById("cropList");
+      cropList.innerHTML = "";
+
+      const querySnapshot = await getDocs(collection(db, "crops"));
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+
+        const div = document.createElement("div");
+        div.innerHTML = `<span><h3>${data.name}</h3><p>Price: ${data.price}</p></span>`;
+
+        // Delete button
+        const deleteBtn = document.createElement("button");
+        deleteBtn.innerText = "Delete";
+        deleteBtn.addEventListener("click", async () => {
+          await deleteDoc(docRef(db, "crops", doc.id));
+          cropList.removeChild(div);
+          alert("Crop deleted successfully!");
+        });
+
+        div.appendChild(deleteBtn);
+        cropList.appendChild(div);
+      });
+
+      // 🔹 Search functionality
+      const searchInput = document.getElementById("searchCrop");
+      searchInput.addEventListener("input", () => {
+        const filter = searchInput.value.toLowerCase();
+        const cropDivs = document.querySelectorAll("#cropList div");
+        cropDivs.forEach(div => {
+          const cropName = div.querySelector("h3").innerText.toLowerCase();
+          div.style.display = cropName.includes(filter) ? "flex" : "none";
+        });
+      });
+    }
+
+    getData(); // initial load
+
+    // 🔹 Add crop
+    document.getElementById("addCropBtn").addEventListener("click", async () => {
+      const name = document.getElementById("cropName").value;
+      const price = document.getElementById("cropPrice").value;
+      if(!name || !price) { alert("Please enter both name and price"); return; }
+
+      await addDoc(collection(db, "crops"), { name, price: Number(price) });
+      alert("Crop added successfully!");
+      getData(); // reload crops
+    });
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Expense Tracker</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #e8f5e9;
+  text-align: center;
+}
+
+h2 {
+  color: green;
+}
+
+input {
+  padding: 8px;
+  margin: 5px;
+}
+
+button {
+  padding: 10px;
+  margin: 5px;
+  background: green;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+#list {
+  margin-top: 10px;
+  background: white;
+  padding: 10px;
+  width: 90%;
+  margin: auto;
+}
+</style>
+</head>
+
+<body>
+
+<h2 id="title">Expense Tracker</h2>
+
+<input type="text" id="name" placeholder="Item name">
+<input type="text" id="amount" placeholder="Amount">
+
+<br>
+
+<button onclick="addExpense()" id="addBtn">Add</button>
+
+<h3 id="total">Total: ₹0</h3>
+
+<div id="list"></div>
+
+<br>
+<button onclick="goBack()" id="backBtn">⬅ Back</button>
+
+<script>
+
+// ✅ Language Data
+const data = {
+  en: {
+    title: "Expense Tracker",
+    name: "Item name",
+    amount: "Amount",
+    add: "Add",
+    total: "Total",
+    back: "Back"
+  },
+  mr: {
+    title: "खर्च ट्रॅकर",
+    name: "वस्तू नाव",
+    amount: "रक्कम",
+    add: "जोडा",
+    total: "एकूण",
+    back: "मागे"
+  },
+  hi: {
+    title: "खर्च ट्रैकर",
+    name: "वस्तु नाम",
+    amount: "राशि",
+    add: "जोड़ें",
+    total: "कुल",
+    back: "वापस"
+  }
+};
+
+// ✅ Load selected language
+let lang = localStorage.getItem("lang") || "en";
+
+let totalAmount = 0;
+
+// ✅ Apply language
+function loadLang() {
+  document.getElementById("title").innerText = data[lang].title;
+  document.getElementById("name").placeholder = data[lang].name;
+  document.getElementById("amount").placeholder = data[lang].amount;
+  document.getElementById("addBtn").innerText = data[lang].add;
+  document.getElementById("backBtn").innerText = "⬅ " + data[lang].back;
+
+  document.getElementById("total").innerText =
+    data[lang].total + ": ₹" + totalAmount;
+}
+
+// ✅ Add Expense (supports 200+300)
+function addExpense() {
+
+  let name = document.getElementById("name").value;
+  let amountInput = document.getElementById("amount").value;
+
+  if (name === "" || amountInput === "") {
+    alert("Enter item and amount");
+    return;
+  }
+
+  // handle 200+300
+  let parts = amountInput.split("+");
+  let amount = 0;
+
+  for (let i = 0; i < parts.length; i++) {
+    amount += Number(parts[i]);
+  }
+
+  let list = document.getElementById("list");
+
+  let item = document.createElement("p");
+  item.innerText = name + " - ₹" + amount;
+
+  list.appendChild(item);
+
+  totalAmount += amount;
+
+  document.getElementById("total").innerText =
+    data[lang].total + ": ₹" + totalAmount;
+
+  document.getElementById("name").value = "";
+  document.getElementById("amount").value = "";
+}
+
+// ✅ Back button
+function goBack() {
+  window.location.href = "features.html";
+}
+
+// ✅ Load page
+window.onload = function() {
+  loadLang();
+};
+
+</script>
+
+</body>
+</html>

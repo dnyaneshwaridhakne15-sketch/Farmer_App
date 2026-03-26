@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Farmer App Login</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #e8f5e9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .box {
+      background: white;
+      padding: 20px;
+      width: 300px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px gray;
+    }
+
+    h2 {
+      text-align: center;
+      color: green;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: green;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .toggle {
+      text-align: center;
+      margin-top: 10px;
+      color: blue;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>Farmer Login</h2>
+
+  <!-- Username Login -->
+  <div id="userLogin">
+    <input type="text" id="username" placeholder="Enter Username">
+    <input type="password" id="password" placeholder="Enter Password">
+    <button onclick="loginUser()">Login</button>
+  </div>
+
+  <!-- Phone Login -->
+  <div id="phoneLogin" style="display:none;">
+    <input type="text" id="phone" placeholder="Enter Phone Number">
+    <button onclick="loginPhone()">Send OTP</button>
+  </div>
+
+  <div class="toggle" onclick="toggleLogin()">
+    Switch Login Method
+  </div>
+</div>
+
+<script>
+function loginUser() {
+  var u = document.getElementById("username").value;
+  var p = document.getElementById("password").value;
+
+  if(u !== "" && p !== "") {
+    window.location.href = "features.html";
+  } else {
+    alert("Enter username and password");
+  }
+}
+
+function loginPhone() {
+  var ph = document.getElementById("phone").value;
+
+  if(ph !== "") {
+    alert("OTP Sent ");
+    window.location.href = "features.html";
+  } else {
+    alert("Enter phone number");
+  }
+}
+
+function toggleLogin() {
+  var user = document.getElementById("userLogin");
+  var phone = document.getElementById("phoneLogin");
+
+  if(user.style.display === "none") {
+    user.style.display = "block";
+    phone.style.display = "none";
+  } else {
+    user.style.display = "none";
+    phone.style.display = "block";
+  }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Crop Information</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #e8f5e9;
+  text-align: center;
+}
+
+h2 {
+  color: green;
+}
+
+select {
+  padding: 10px;
+  margin: 10px;
+}
+
+#info {
+  background: white;
+  padding: 10px;
+  width: 90%;
+  margin: auto;
+  margin-top: 10px;
+}
+
+button {
+  padding: 10px;
+  margin: 5px;
+  background: green;
+  color: white;
+  border: none;
+}
+</style>
+</head>
+
+<body>
+
+<h2 id="title">Crop Information</h2>
+
+<select id="cropSelect" onchange="showInfo()">
+  <option value="">Select Crop</option>
+  <option value="wheat">Wheat</option>
+  <option value="rice">Rice</option>
+  <option value="cotton">Cotton</option>
+  <option value="sugarcane">Sugarcane</option>
+  <option value="maize">Maize</option>
+</select>
+
+<div id="info"></div>
+
+<br>
+<button onclick="goBack()" id="backBtn">⬅ Back</button>
+
+<script>
+
+// ✅ Language Data
+const data = {
+  en: {
+    title: "Crop Information",
+    select: "Select Crop",
+    back: "Back",
+    crops: {
+      wheat: "Season: Winter | Water: Medium | Soil: Loamy",
+      rice: "Season: Rainy | Water: High | Soil: Clay",
+      cotton: "Season: Summer | Water: Medium | Soil: Black",
+      sugarcane: "Season: Year-round | Water: High | Soil: Fertile",
+      maize: "Season: Summer | Water: Low | Soil: Sandy"
+    }
+  },
+  mr: {
+    title: "पिक माहिती",
+    select: "पिक निवडा",
+    back: "मागे",
+    crops: {
+      wheat: "हंगाम: हिवाळा | पाणी: मध्यम | माती: दोमट",
+      rice: "हंगाम: पावसाळा | पाणी: जास्त | माती: चिकण",
+      cotton: "हंगाम: उन्हाळा | पाणी: मध्यम | माती: काळी",
+      sugarcane: "हंगाम: वर्षभर | पाणी: जास्त | माती: सुपीक",
+      maize: "हंगाम: उन्हाळा | पाणी: कमी | माती: वालुकामय"
+    }
+  },
+  hi: {
+    title: "फसल जानकारी",
+    select: "फसल चुनें",
+    back: "वापस",
+    crops: {
+      wheat: "मौसम: सर्दी | पानी: मध्यम | मिट्टी: दोमट",
+      rice: "मौसम: वर्षा | पानी: अधिक | मिट्टी: चिकनी",
+      cotton: "मौसम: गर्मी | पानी: मध्यम | मिट्टी: काली",
+      sugarcane: "मौसम: सालभर | पानी: अधिक | मिट्टी: उपजाऊ",
+      maize: "मौसम: गर्मी | पानी: कम | मिट्टी: रेतीली"
+    }
+  }
+};
+
+// ✅ Load language
+let lang = localStorage.getItem("lang") || "en";
+
+// ✅ Apply language
+
+ function loadLang() {
+  
+  document.getElementById("title").innerText = data[lang].title;
+  document.getElementById("backBtn").innerText = "⬅ " + data[lang].back;
+  
+  let select = document.getElementById("cropSelect");
+  
+  // clear old options
+  select.innerHTML = "";
+  
+  // add first option
+  let first = document.createElement("option");
+  first.value = "";
+  first.text = data[lang].select;
+  select.appendChild(first);
+  
+  // crop list
+  let crops = ["wheat", "rice", "cotton", "sugarcane", "maize"];
+  
+  crops.forEach(function(crop) {
+    let option = document.createElement("option");
+    option.value = crop;
+    
+    // language wise names
+    if (lang === "mr") {
+      if (crop === "wheat") option.text = "गहू";
+      if (crop === "rice") option.text = "तांदूळ";
+      if (crop === "cotton") option.text = "कापूस";
+      if (crop === "sugarcane") option.text = "ऊस";
+      if (crop === "maize") option.text = "मका";
+    }
+    else if (lang === "hi") {
+      if (crop === "wheat") option.text = "गेहूं";
+      if (crop === "rice") option.text = "चावल";
+      if (crop === "cotton") option.text = "कपास";
+      if (crop === "sugarcane") option.text = "गन्ना";
+      if (crop === "maize") option.text = "मक्का";
+    }
+    else {
+      option.text = crop.charAt(0).toUpperCase() + crop.slice(1);
+    }
+    
+    select.appendChild(option);
+  });
+}
+
+// ✅ Show crop info
+function showInfo() {
+  let crop = document.getElementById("cropSelect").value;
+
+  if (crop === "") {
+    document.getElementById("info").innerText = "";
+    return;
+  }
+
+  document.getElementById("info").innerText =
+    data[lang].crops[crop];
+}
+
+// ✅ Back
+function goBack() {
+  window.location.href = "features.html";
+}
+
+// ✅ Load page
+window.onload = function() {
+  loadLang();
+};
+
+</script>
+
+</body>
+</html>

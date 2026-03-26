@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+
+<title>Farmer Communication</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #e8f5e9;
+  text-align: center;
+}
+
+h2 {
+  color: green;
+}
+
+#chatBox {
+  width: 90%;
+  height: 300px;
+  margin: auto;
+  border: 1px solid #ccc;
+  background: white;
+  overflow-y: auto;
+  padding: 10px;
+  text-align: left;
+}
+
+input {
+  width: 70%;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+button {
+  padding: 10px;
+  background: green;
+  color: white;
+  border: none;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2 id="title">Farmer Communication</h2>
+
+<div id="chatBox"></div>
+
+<input type="text" id="msg" placeholder="Type message...">
+<button onclick="sendMsg()" id="sendBtn">Send</button>
+<button onclick="goBack()" id="backBtn">⬅ Back</button>
+<br><br>
+
+
+<script>
+
+/* Language Data */
+const data = {
+  en: {
+    title: "Farmer Communication",
+    placeholder: "Type message...",
+    send: "Send",
+    back: "Back"
+  },
+  mr: {
+    title: "शेतकरी संवाद",
+    placeholder: "संदेश लिहा...",
+    send: "पाठवा",
+    back: "मागे"
+  },
+  hi: {
+    title: "किसान संवाद",
+    placeholder: "संदेश लिखें...",
+    send: "भेजें",
+    back: "वापस"
+  }
+};
+
+/* Load language from storage */
+let lang = localStorage.getItem("lang") || "en";
+
+function loadLang() {
+  document.getElementById("title").textContent = data[lang].title;
+  document.getElementById("msg").placeholder = data[lang].placeholder;
+  document.getElementById("sendBtn").textContent = data[lang].send;
+  document.getElementById("backBtn").textContent = "⬅ " + data[lang].back;
+}
+
+/* Send message */
+function sendMsg() {
+  let msg = document.getElementById("msg").value;
+
+  if (msg === "") return;
+
+  let box = document.getElementById("chatBox");
+
+  box.innerHTML += "<p><b>You:</b> " + msg + "</p>";
+
+  document.getElementById("msg").value = "";
+
+  box.scrollTop = box.scrollHeight;
+}
+
+/* Back button */
+function goBack() {
+  window.location.href = "features.html";
+}
+
+/* On load */
+window.onload = function() {
+  loadLang();
+};
+
+</script>
+
+</body>
+</html>
