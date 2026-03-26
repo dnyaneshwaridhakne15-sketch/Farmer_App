@@ -146,7 +146,7 @@ function goToCrop() {
     }
 
     input, button {
-      width: 100%;
+      
       padding: 12px;
       margin: 6px 0;
     }
@@ -156,17 +156,37 @@ function goToCrop() {
       color: white;
       border: none;
       border-radius: 8px;
+     
     }
 
     h1 {
       text-align: center;
       color: green;
     }
+    .features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .feature-btn {
+      width: 100%;
+      background: green;
+      color: white;
+      padding: 10px;
+      border-radius: 15px;
+      text-align: center;
+      font-size: 14px;
+    }
   </style>
 
 </head>
 
-<body>
+
+
+</body>
+</html>
 
 
 
@@ -192,6 +212,13 @@ function goToCrop() {
 
 <!-- APP -->
 <div id="appScreen" style="display:none;">
+  <div class="features">
+  <div class="feature-btn">Live Market Price</div>
+  <div class="feature-btn">Farmer Communication</div>
+  <div class="feature-btn">Pest & Disease Scanner</div>
+  <div class="feature-btn">Expense Tracker</div>
+  <div class="feature-btn">Crop Information</div>
+</div>
   <h1>Farmer App</h1>
   <button id="logoutBtn">Logout</button>
 </div>
