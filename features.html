@@ -47,11 +47,12 @@
 
 <h2 id="title">Farmer Marketing App</h2>
 
-<div class="lang">
+
+<h2>Choose Language</h2>
   <button onclick="setLang('en')">English</button>
   <button onclick="setLang('mr')">मराठी</button>
   <button onclick="setLang('hi')">हिंदी</button>
-</div>
+
 
 <div class="container">
   <button id="market" onclick="goToPage()">Live Market Price</button>
@@ -91,7 +92,7 @@ const data = {
 };
 
 function setLang(lang) {
-  localStorage.setItem("lang", lang);
+  localStorage.setItem("language", lang);
   document.getElementById("title").textContent = data[lang].title;
   document.getElementById("market").textContent = data[lang].market;
   document.getElementById("chat").textContent = data[lang].chat;
@@ -138,7 +139,12 @@ function goToCrop() {
 const firebaseConfig = {
  apiKey: "AIzaSyCxnZ88ixV9Oi3-laN8T-DKiSc3IegNZ3s",
   authDomain: "farmerapp-e098a.firebaseapp.com",
-  projectId: "farmerapp-e098a"
+  databaseURL: "https://farmerapp-e098a-default-rtdb.firebaseio.com",
+  projectId: "farmerapp-e098a",
+  storageBucket: "farmerapp-e098a.firebasestorage.app",
+  messagingSenderId: "42230324667",
+  appId: "1:42230324667:web:28d02ffab67bac2611f89e",
+  measurementId: "G-1KRYMYHJGH"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -150,6 +156,7 @@ function logout() {
   });
 }
 </script>
+
 
 </body>
 </html>
