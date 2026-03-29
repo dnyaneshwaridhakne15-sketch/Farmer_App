@@ -1,240 +1,177 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-<meta charset="UTF-8">
-<title>Crop Information</title>
+  <meta charset="UTF-8">
+  <title>Crop Info</title>
 
-<style>
-body {
-  font-family: Arial;
-  background: #e8f5e9;
-  text-align: center;
-}
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
-h2 {
-  color: green;
-}
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #f1f8e9;
+    }
 
-select {
-  padding: 10px;
-  margin: 10px;
-}
+    h2 { color: green; }
 
-#info {
-  background: white;
-  padding: 10px;
-  width: 90%;
-  margin: auto;
-  margin-top: 10px;
-}
+    select, button {
+      padding: 10px;
+      margin: 10px;
+      width: 220px;
+    }
 
-button {
-  padding: 10px;
-  margin: 5px;
-  background: green;
-  color: white;
-  border: none;
-}
-</style>
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+
+    #backBtn {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: green;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+  </style>
 </head>
 
 <body>
 
-<h2 id="title">Crop Information</h2>
+<h2 id="title">Select Crop</h2>
 
-<select id="cropSelect" onchange="showInfo()">
-  <option value="">Select Crop</option>
-  <option value="wheat">Wheat</option>
-  <option value="rice">Rice</option>
-  <option value="cotton">Cotton</option>
-  <option value="sugarcane">Sugarcane</option>
-  <option value="maize">Maize</option>
-</select>
-
-<div id="info"></div>
+<select id="cropSelect"></select>
 
 <br>
-<button onclick="goBack()" id="backBtn">⬅ Back</button>
 
-<script>
-
-// ✅ Language Data
-const data = {
-  en: {
-    title: "Crop Information",
-    select: "Select Crop",
-    back: "Back",
-    crops: {
-      wheat: "Season: Winter | Water: Medium | Soil: Loamy",
-      rice: "Season: Rainy | Water: High | Soil: Clay",
-      cotton: "Season: Summer | Water: Medium | Soil: Black",
-      sugarcane: "Season: Year-round | Water: High | Soil: Fertile",
-      maize: "Season: Summer | Water: Low | Soil: Sandy"
-    }
-  },
-  mr: {
-    title: "पिक माहिती",
-    select: "पिक निवडा",
-    back: "मागे",
-    crops: {
-      wheat: "हंगाम: हिवाळा | पाणी: मध्यम | माती: दोमट",
-      rice: "हंगाम: पावसाळा | पाणी: जास्त | माती: चिकण",
-      cotton: "हंगाम: उन्हाळा | पाणी: मध्यम | माती: काळी",
-      sugarcane: "हंगाम: वर्षभर | पाणी: जास्त | माती: सुपीक",
-      maize: "हंगाम: उन्हाळा | पाणी: कमी | माती: वालुकामय"
-    }
-  },
-  hi: {
-    title: "फसल जानकारी",
-    select: "फसल चुनें",
-    back: "वापस",
-    crops: {
-      wheat: "मौसम: सर्दी | पानी: मध्यम | मिट्टी: दोमट",
-      rice: "मौसम: वर्षा | पानी: अधिक | मिट्टी: चिकनी",
-      cotton: "मौसम: गर्मी | पानी: मध्यम | मिट्टी: काली",
-      sugarcane: "मौसम: सालभर | पानी: अधिक | मिट्टी: उपजाऊ",
-      maize: "मौसम: गर्मी | पानी: कम | मिट्टी: रेतीली"
-    }
-  }
-};
-
-// ✅ Load language
-let lang = localStorage.getItem("lang") || "en";
-
-// ✅ Apply language
-
- function loadLang() {
-  
-  document.getElementById("title").innerText = data[lang].title;
-  document.getElementById("backBtn").innerText = "⬅ " + data[lang].back;
-  
-  let select = document.getElementById("cropSelect");
-  
-  // clear old options
-  select.innerHTML = "";
-  
-  // add first option
-  let first = document.createElement("option");
-  first.value = "";
-  first.text = data[lang].select;
-  select.appendChild(first);
-  
-  // crop list
-  let crops = ["wheat", "rice", "cotton", "sugarcane", "maize"];
-  
-  crops.forEach(function(crop) {
-    let option = document.createElement("option");
-    option.value = crop;
-    
-    // language wise names
-    if (lang === "mr") {
-      if (crop === "wheat") option.text = "गहू";
-      if (crop === "rice") option.text = "तांदूळ";
-      if (crop === "cotton") option.text = "कापूस";
-      if (crop === "sugarcane") option.text = "ऊस";
-      if (crop === "maize") option.text = "मका";
-    }
-    else if (lang === "hi") {
-      if (crop === "wheat") option.text = "गेहूं";
-      if (crop === "rice") option.text = "चावल";
-      if (crop === "cotton") option.text = "कपास";
-      if (crop === "sugarcane") option.text = "गन्ना";
-      if (crop === "maize") option.text = "मक्का";
-    }
-    else {
-      option.text = crop.charAt(0).toUpperCase() + crop.slice(1);
-    }
-    
-    select.appendChild(option);
-  });
-}
-
-// ✅ Show crop info
-function showInfo() {
-  let crop = document.getElementById("cropSelect").value;
-
-  if (crop === "") {
-    document.getElementById("info").innerText = "";
-    return;
-  }
-
-  document.getElementById("info").innerText =
-    data[lang].crops[crop];
-}
-
-// ✅ Back
-function goBack() {
-  window.location.href = "features.html";
-}
-
-// ✅ Load page
-window.onload = function() {
-  loadLang();
-};
-
-</script>
-
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Crop Information</title>
-</head>
-
-<body style="text-align:center; font-family:Arial;">
-
-<h2>🌾 Crop Information</h2>
-
-<input type="text" id="cropInput" placeholder="Enter crop name">
-<br><br>
-
-<button onclick="getCrop()">Search</button>
+<button id="searchBtn">Get Info</button>
 
 <p id="result"></p>
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<button id="backBtn">Back</button>
 
 <script>
+
+// 🔥 Firebase config (तुझा टाक)
 const firebaseConfig = {
    apiKey: "AIzaSyCxnZ88ixV9Oi3-laN8T-DKiSc3IegNZ3s",
    authDomain: "farmerapp-e098a.firebaseapp.com",
-   projectId: "farmerapp-e098a"
+   databaseURL: "https://farmerapp-e098a-default-rtdb.firebaseio.com",
+   projectId: "farmerapp-e098a",
+   storageBucket: "farmerapp-e098a.firebasestorage.app",
+   messagingSenderId: "42230324667",
+   appId: "1:42230324667:web:28d02ffab67bac2611f89e",
+   measurementId: "G-1KRYMYHJGH"
 };
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-function getCrop() {
-  const name = document.getElementById("cropInput").value.toLowerCase();
-  
-  db.collection("crops").get()
-    .then((querySnapshot) => {
-      
-      let found = false;
-      
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        
-        if (data.cropName === name) {
-          document.getElementById("result").innerText = data.info;
-          found = true;
-        }
-      });
-      
-      if (!found) {
-        document.getElementById("result").innerText = "No data found ❌";
+
+// 🔥 PAGE LOAD
+window.onload = function () {
+
+  let lang = localStorage.getItem("language") || "en";
+
+  const text = {
+    en: {
+      title: "Select Crop",
+      button: "Get Info",
+      back: "Back",
+      select: "Select Crop"
+    },
+    mr: {
+      title: "पीक निवडा",
+      button: "माहिती पहा",
+      back: "मागे जा",
+      select: "पीक निवडा"
+    },
+    hi: {
+      title: "फसल चुनें",
+      button: "जानकारी देखें",
+      back: "वापस जाएँ",
+      select: "फसल चुनें"
+    }
+  };
+
+  // UI text
+  document.getElementById("title").innerText = text[lang].title;
+  document.getElementById("searchBtn").innerText = text[lang].button;
+  document.getElementById("backBtn").innerText = text[lang].back;
+
+  // 🔥 LOAD CROPS FROM FIREBASE
+  const dropdown = document.getElementById("cropSelect");
+  dropdown.innerHTML = `<option>${text[lang].select}</option>`;
+
+  db.collection("Crops").get().then(snapshot => {
+    snapshot.forEach(doc => {
+      let data = doc.data();
+
+      let name = "";
+
+      if (lang === "mr") {
+        name = data.cropName_mr;
+      } else if (lang === "hi") {
+        name = data.cropName_hi;
+      } else {
+        name = data.cropName_en;
       }
-    })
-    .catch((error) => {
-      alert(error);
+
+      dropdown.innerHTML += `<option value="${doc.id}">${name}</option>`;
     });
-}
-  
+  });
+
+};
+
+
+// 🔥 BUTTON CLICK
+document.getElementById("searchBtn").onclick = function () {
+
+  let crop = document.getElementById("cropSelect").value;
+  let lang = localStorage.getItem("language") || "en";
+
+  if (crop === "Select Crop" || crop === "पीक निवडा" || crop === "फसल चुनें") {
+    alert("Please select crop");
+    return;
+  }
+
+  db.collection("Crops").doc(crop).get().then(doc => {
+
+    if (doc.exists) {
+      let data = doc.data();
+
+      let info = "";
+
+      if (lang === "mr") {
+        info = data.info_mr;
+      } else if (lang === "hi") {
+        info = data.info_hi;
+      } else {
+        info = data.info_en;
+      }
+
+      document.getElementById("result").innerText = info;
+
+    } else {
+      document.getElementById("result").innerText = "No data found";
+    }
+
+  });
+
+};
+
+
+// 🔙 BACK
+document.getElementById("backBtn").onclick = function () {
+  window.location.href = "features.html";
+};
+
 </script>
 
-</body>
-</html>
 </body>
 </html>
