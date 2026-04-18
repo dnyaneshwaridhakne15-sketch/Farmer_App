@@ -1,90 +1,213 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pest AI Scanner</title>
+  
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 0; padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      background: #f9f9f9;
-      height: 100vh;
-    }
-    header {
-      width: 100%;
-      background: #4CAF50;
-      color: white;
+      font-family: Arial, "Noto Sans Devanagari", sans-serif;
+      background: #e8f5e9;
       text-align: center;
-      padding: 15px 0;
-      font-size: 20px;
     }
-    #camera {
-      width: 90%;
-      max-width: 400px;
-      margin: 20px auto;
-      border: 2px solid #ddd;
-      border-radius: 10px;
-    }
+    
     button {
-      background: #4CAF50;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 18px;
-      border-radius: 5px;
+      padding: 10px;
       margin: 10px;
-      cursor: pointer;
+      border: none;
+      background: green;
+      color: white;
+      border-radius: 8px;
     }
-    button:disabled {
-      background: #aaa;
-      cursor: not-allowed;
-    }
+    
     #result {
-      margin-top: 15px;
-      font-size: 18px;
-      color: #333;
-      text-align: center;
+      margin-top: 20px;
+      white-space: pre-wrap;
+      background: #c8e6c9;
+      padding: 15px;
+      border-radius: 10px;
+      display: none;
     }
   </style>
 </head>
+
 <body>
-  <header>Pest AI Scanner</header>
   
-  <video id="camera" autoplay playsinline></video>
-  <button id="captureBtn">Scan Pest</button>
-  <div id="result">Result will appear here</div>
-
+  <button onclick="goBack()" id="backBtn">Back</button>
+  
+  <h2 id="title">🌿 Pest & Disease Scanner</h2>
+  
+  <label id="fileLabel">Choose File</label><br>
+  <input type="file" id="fileInput"><br>
+  
+  <button onclick="scanImage()" id="scanBtn">Scan</button>
+  
+  <div id="result"></div>
+  
   <script>
-    const video = document.getElementById('camera');
-    const captureBtn = document.getElementById('captureBtn');
-    const resultDiv = document.getElementById('result');
-
-    // Mobile camera access
-    async function initCamera() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-        video.srcObject = stream;
-      } catch (err) {
-        resultDiv.innerText = "Camera access denied or not supported.";
-        captureBtn.disabled = true;
+    // 🌐 UI Language Data
+    const uiLang = {
+      en: {
+        title: "🌿 Pest & Disease Scanner",
+        scan: "Scan",
+        back: "Back",
+        choose: "Choose File"
+      },
+      mr: {
+        title: "🌿 किड व रोग स्कॅनर",
+        scan: "स्कॅन करा",
+        back: "मागे जा",
+        choose: "फाइल निवडा"
+      },
+      hi: {
+        title: "🌿 कीट और रोग स्कैनर",
+        scan: "स्कैन करें",
+        back: "वापस जाएं",
+        choose: "फ़ाइल चुनें"
       }
+    };
+    
+    // 🌐 Load language
+    let currentLang;
+    
+    window.onload = function() {
+      currentLang = localStorage.getItem("language") || "en";
+      updateUI();
+    };
+    
+    // 🔄 Update UI text
+    function updateUI() {
+      const t = uiLang[currentLang];
+      
+      document.getElementById("title").innerText = t.title;
+      document.getElementById("scanBtn").innerText = t.scan;
+      document.getElementById("backBtn").innerText = t.back;
+      document.getElementById("fileLabel").innerText = t.choose;
     }
+    
+    // 🔙 Back button
+    function goBack() {
+      window.location.href = "features.html";
+    }
+    
+    // 🤖 Fake AI Scan
+    function scanImage() {
+      const file = document.getElementById("fileInput").files[0];
+      const result = document.getElementById("result");
+      
+      if (!file) {
+        result.style.display = "block";
+        result.innerText = "Please select image";
+        return;
+      }
+      
+      result.style.display = "block";
+      result.innerText = "🔄 AI is analyzing image...";
+      
+       setTimeout(() => {
+  
+  let output = "";
+  
+  if (currentLang === "mr") {
+    output = `
+🌿 रोग: पानांवरील डाग (Leaf Spot)
 
-    initCamera();
+🔍 लक्षणे:
+- पानांवर पिवळे किंवा तपकिरी डाग दिसतात
+- पानं सुकायला लागतात
+- पानांवर छिद्रे पडू शकतात
+- झाडाची वाढ मंदावते
 
-    // Demo AI scanner logic
-    captureBtn.addEventListener('click', () => {
-      // Here you can integrate real AI model or API
-      // For demo, random result
-      const pests = ["Aphid", "Whitefly", "Locust", "No pest detected"];
-      const randomPest = pests[Math.floor(Math.random() * pests.length)];
-      resultDiv.innerText = `Detected: ${randomPest}`;
-    });
+🦠 कारणे:
+- बुरशीजन्य संसर्ग
+- जास्त ओलावा
+- हवेत आर्द्रता जास्त असणे
+
+💊 उपाय:
+- Mancozeb / Carbendazim फवारणी करा
+- 7-10 दिवसांनी पुन्हा फवारणी करा
+- संक्रमित पानं लगेच काढून टाका
+
+🛡️ प्रतिबंध:
+- जास्त पाणी देऊ नका
+- झाडांमध्ये योग्य अंतर ठेवा
+- शेत स्वच्छ ठेवा
+
+🌱 अतिरिक्त माहिती:
+हा रोग प्रामुख्याने पावसाळ्यात वाढतो.
+वेळेवर उपचार न केल्यास उत्पादन कमी होऊ शकते.
+    `;
+  }
+  
+  else if (currentLang === "hi") {
+    output = `
+🌿 रोग: पत्ती धब्बा (Leaf Spot)
+
+🔍 लक्षण:
+- पत्तियों पर पीले/भूरे धब्बे
+- पत्ते सूखने लगते हैं
+- पत्तियों में छेद हो सकते हैं
+- पौधे की वृद्धि रुक जाती है
+
+🦠 कारण:
+- फंगल संक्रमण
+- अधिक नमी
+- गीला वातावरण
+
+💊 समाधान:
+- Mancozeb / Carbendazim का छिड़काव करें
+- 7-10 दिन बाद दोहराएं
+- संक्रमित पत्तियां हटा दें
+
+🛡️ बचाव:
+- अधिक पानी न दें
+- पौधों के बीच दूरी रखें
+- खेत साफ रखें
+
+🌱 अतिरिक्त जानकारी:
+यह रोग बरसात में तेजी से फैलता है।
+समय पर उपचार जरूरी है।
+    `;
+  }
+  
+  else {
+    output = `
+🌿 Disease: Leaf Spot
+
+🔍 Symptoms:
+- Yellow or brown spots on leaves
+- Leaves start drying
+- Holes may appear on leaves
+- Plant growth slows down
+
+🦠 Causes:
+- Fungal infection
+- High moisture
+- Humid conditions
+
+💊 Treatment:
+- Spray Mancozeb / Carbendazim
+- Repeat after 7–10 days
+- Remove infected leaves
+
+🛡️ Prevention:
+- Avoid overwatering
+- Maintain proper spacing
+- Keep field clean
+
+🌱 Extra Info:
+This disease spreads quickly during rainy season.
+Timely treatment is important to avoid crop loss.
+    `;
+  }
+  
+  result.innerText = output;
+  
+}, 2000);
+    }
   </script>
+  
 </body>
+
 </html>
