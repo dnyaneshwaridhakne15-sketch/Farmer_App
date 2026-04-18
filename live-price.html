@@ -1,146 +1,201 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+  <!-- 🔥 VERY IMPORTANT -->
+  <meta charset="UTF-8">
 
-<title>Live Market Price</title>
-
+  <title id="title">Live Market Prices</title>
 <style>
 body {
-  font-family: Arial;
-  background: #e8f5e9;
+  font-family: Arial, "Noto Sans Devanagari", sans-serif;
+  margin: 0;
+  background: linear-gradient(135deg, #a8e6cf, #dcedc1);
+  color: #333;
+}
+
+/* HEADER */
+.header {
+  padding: 15px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #2e7d32;
   text-align: center;
 }
 
-h2 {
-  color: green;
-}
-
-table {
-  margin: auto;
-  border-collapse: collapse;
-  width: 90%;
+/* CARD */
+.card {
   background: white;
+  margin: 20px;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-th, td {
-  border: 1px solid #ccc;
-  padding: 8px;
+/* TABLE */
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
 th {
-  background: green;
+  background: #66bb6a;
   color: white;
+  padding: 10px;
+}
+
+td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+/* BUTTON */
+button {
+  padding: 10px 20px;
+  margin-top: 15px;
+  border: none;
+  background: #66bb6a;
+  color: white;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+button:hover {
+  background: #4caf50;
 }
 </style>
 </head>
 
 <body>
 
-<h2 id="title">Live Market Prices (Maharashtra)</h2>
+<h2 id="heading">Live Market Prices </h2>
+
+
+
+<br><br>
 
 <table>
-<thead>
-<tr>
-<th id="item">Item</th>
-<th id="price">Price (₹/kg)</th>
-</tr>
-</thead>
-
-<tbody id="tableData"></tbody>
-
-</table>
-<br><br>
-<button onclick="goBack()" id="backBtn">⬅ Back</button>
-
-<script>
-
-/* DATA (30 items) */
-const data = {
-  en: {
-    title: "Live Market Prices (Maharashtra)",
-    item: "Item",
-    price: "Price (₹/kg)",
-    back:"Back",
-    products: [
-      ["Tomato",30],["Potato",25],["Onion",20],["Cabbage",25],["Carrot",35],
-      ["Brinjal",40],["Spinach",20],["Cauliflower",30],["Peas",50],["Chili",60],
-
-      ["Apple",120],["Banana",40],["Mango",80],["Orange",70],["Papaya",50],
-      ["Grapes",90],["Pineapple",60],["Guava",40],["Pomegranate",110],["Watermelon",30],
-
-      ["Rice",60],["Wheat",50],["Toor Dal",120],["Chana Dal",90],["Moong Dal",110],
-      ["Urad Dal",130],["Masoor Dal",100],["Soybean",70],["Groundnut",80],["Corn",40]
-    ]
-  },
-
-  mr: {
-    title: "महाराष्ट्र थेट बाजार भाव",
-    item: "उत्पादन",
-    price: "भाव (₹/किलो)",
-    back: "मागे",
-    products: [
-      ["टोमॅटो",30],["बटाटा",25],["कांदा",20],["कोबी",25],["गाजर",35],
-      ["वांगी",40],["पालक",20],["फुलकोबी",30],["मटार",50],["मिरची",60],
-
-      ["सफरचंद",120],["केळी",40],["आंबा",80],["संत्रे",70],["पपई",50],
-      ["द्राक्षे",90],["अननस",60],["पेरू",40],["डाळिंब",110],["कलिंगड",30],
-
-      ["तांदूळ",60],["गहू",50],["तूर डाळ",120],["चना डाळ",90],["मूग डाळ",110],
-      ["उडीद डाळ",130],["मसूर डाळ",100],["सोयाबीन",70],["शेंगदाणे",80],["मका",40]
-    ]
-  },
-
-  hi: {
-    title: "महाराष्ट्र लाइव बाजार भाव",
-    item: "वस्तु",
-    price: "भाव (₹/किलो)",
-    back: "वापस",
-    products: [
-      ["टमाटर",30],["आलू",25],["प्याज",20],["पत्ता गोभी",25],["गाजर",35],
-      ["बैंगन",40],["पालक",20],["फूलगोभी",30],["मटर",50],["मिर्च",60],
-
-      ["सेब",120],["केला",40],["आम",80],["संतरा",70],["पपीता",50],
-      ["अंगूर",90],["अनानास",60],["अमरूद",40],["अनार",110],["तरबूज",30],
-
-      ["चावल",60],["गेहूं",50],["तूर दाल",120],["चना दाल",90],["मूंग दाल",110],
-      ["उड़द दाल",130],["मसूर दाल",100],["सोयाबीन",70],["मूंगफली",80],["मक्का",40]
-    ]
-  }
-};
-
-/* Load language */
-let lang = localStorage.getItem("lang") || "en";
-
-function loadData() {
-  document.getElementById("title").textContent = data[lang].title;
-  document.getElementById("item").textContent = data[lang].item;
-  document.getElementById("price").textContent = data[lang].price;
-  document.getElementById("backBtn").textContent = data[lang].back;
-
-  let table = document.getElementById("tableData");
-  table.innerHTML = "";
   
 
-  data[lang].products.forEach(p => {
-    table.innerHTML += `<tr><td>${p[0]}</td><td>${p[1]}</td></tr>`;
+
+</div>
+  <tr>
+    <th id="itemText">Item</th>
+    <th id="priceText">Price (₹/kg)</th>
+  </tr>
+  <tbody id="tableBody"></tbody>
+</table>
+<div style="text-align:center;">
+  <button onclick="goBack()" id="backBtn">Back</button>
+</div>
+<script>
+
+// ✅ Always get correct language
+function getLang() {
+  let lang = localStorage.getItem("language");
+
+  // 🔥 Fix: wrong value avoid
+  if (lang !== "mr" && lang !== "hi") {
+    return "en";
+  }
+  return lang;
+}
+
+// ✅ 15 items (correct Marathi/Hindi)
+const items = [
+  { en: "Tomato", mr: "टोमॅटो", hi: "टमाटर", price: 30 },
+  { en: "Potato", mr: "बटाटा", hi: "आलू", price: 25 },
+  { en: "Onion", mr: "कांदा", hi: "प्याज", price: 20 },
+  { en: "Cabbage", mr: "कोबी", hi: "पत्तागोभी", price: 25 },
+  { en: "Carrot", mr: "गाजर", hi: "गाजर", price: 35 },
+  { en: "Brinjal", mr: "वांगी", hi: "बैंगन", price: 40 },
+  { en: "Spinach", mr: "पालक", hi: "पालक", price: 20 },
+  { en: "Cauliflower", mr: "फुलकोबी", hi: "फूलगोभी", price: 30 },
+  { en: "Peas", mr: "वाटाणे", hi: "मटर", price: 50 },
+  { en: "Chilli", mr: "मिरची", hi: "मिर्च", price: 60 },
+  { en: "Apple", mr: "सफरचंद", hi: "सेब", price: 120 },
+  { en: "Banana", mr: "केळी", hi: "केला", price: 40 },
+  { en: "Mango", mr: "आंबा", hi: "आम", price: 80 },
+  { en: "Orange", mr: "संत्रे", hi: "संतरा", price: 70 },
+  { en: "Grapes", mr: "द्राक्षे", hi: "अंगूर", price: 90 }
+];
+
+// ✅ Load table properly
+function loadData() {
+  let lang = getLang();
+  let table = document.getElementById("tableBody");
+  table.innerHTML = "";
+
+  items.forEach(item => {
+    let name = item[lang]; // 🔥 correct mapping
+    let row = `<tr>
+      <td>${name}</td>
+      <td>${item.price}</td>
+    </tr>`;
+    table.innerHTML += row;
   });
 }
 
-/* Notification simulation */
-function checkPriceChange() {
-  alert("📢 Price Updated!");
+// ✅ Apply UI language
+function applyLanguage() {
+  let lang = getLang();
+
+  if (lang === "mr") {
+    document.getElementById("title").innerText = "लाईव्ह बाजारभाव";
+    document.getElementById("heading").innerText = "लाईव्ह बाजारभाव ";
+    document.getElementById("itemText").innerText = "वस्तू";
+    document.getElementById("priceText").innerText = "किंमत (₹/kg)";
+    document.getElementById("backBtn").innerText = "मागे जा";
+  } 
+  else if (lang === "hi") {
+    document.getElementById("title").innerText = "लाइव बाजार भाव";
+    document.getElementById("heading").innerText = "लाइव बाजार भाव ";
+    document.getElementById("itemText").innerText = "वस्तु";
+    document.getElementById("priceText").innerText = "कीमत (₹/kg)";
+    document.getElementById("backBtn").innerText = "वापस जाएं";
+  } 
+  else {
+    document.getElementById("backBtn").innerText = "Back";
+  }
 }
 
-/* Load page */
-window.onload = function() {
-  loadData();
+// 🔔 Notification
+function checkPriceChange() {
+  let lang = getLang();
 
-  // simulate notification every 10 sec
-  setInterval(checkPriceChange, 10000);
-};
+  if (lang === "mr") {
+    alert("📢 बाजारभाव अपडेट झाला!");
+  } 
+  else if (lang === "hi") {
+    alert("📢 बाजार भाव अपडेट हुआ!");
+  } 
+  else {
+    alert("📢 Market Price Updated!");
+  }
+}
+
+// 🔙 Back button
 function goBack() {
   window.location.href = "features.html";
+}
+
+// 🚀 Start
+window.onload = function() {
+  applyLanguage();
+  loadData();
+};
+async function fetchLivePrices() {
+  try {
+    const response = await fetch("https://chromatographically-liturgical-carisa.ngrok-free.dev ");
+    const data = await response.json();
+    
+    console.log("API DATA:", data);
+    
+    alert("Data fetched! Check console");
+    
+  } catch (error) {
+    alert("Error connecting to backend");
+  }
 }
 </script>
 
