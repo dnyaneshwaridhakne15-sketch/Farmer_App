@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 <meta charset="UTF-8">
 <title>Expense Tracker</title>
@@ -12,143 +11,173 @@ body {
   text-align: center;
 }
 
-h2 {
-  color: green;
-}
-
-input {
-  padding: 8px;
+input, button {
+  width: 90%;
+  padding: 10px;
   margin: 5px;
+  border-radius: 8px;
 }
 
 button {
-  padding: 10px;
-  margin: 5px;
   background: green;
   color: white;
   border: none;
-  border-radius: 5px;
 }
 
-#list {
-  margin-top: 10px;
-  background: white;
+li {
+  background: #c8e6c9;
+  margin: 5px;
   padding: 10px;
-  width: 90%;
-  margin: auto;
+  border-radius: 8px;
 }
 </style>
 </head>
 
 <body>
 
-<h2 id="title">Expense Tracker</h2>
+<h2 id="title"></h2>
 
-<input type="text" id="name" placeholder="Item name">
-<input type="text" id="amount" placeholder="Amount">
+<input type="text" id="name">
+<input type="text" id="amount"> <!-- IMPORTANT: text type -->
 
-<br>
+<button onclick="addExpense()" id="addBtn"></button>
 
-<button onclick="addExpense()" id="addBtn">Add</button>
+<ul id="list"></ul>
 
-<h3 id="total">Total: ₹0</h3>
+<h3 id="total"></h3>
 
-<div id="list"></div>
-
-<br>
-<button onclick="goBack()" id="backBtn">⬅ Back</button>
+<button onclick="goBack()" id="backBtn"></button>
 
 <script>
 
-// ✅ Language Data
-const data = {
+let expenses = [];
+
+// 🌐 Language data
+const langData = {
   en: {
     title: "Expense Tracker",
-    name: "Item name",
-    amount: "Amount",
+    name: "Enter item name",
+    amount: "Enter amount (e.g. 100+200)",
     add: "Add",
     total: "Total",
-    back: "Back"
+    back: "Back",
+    alert1: "Enter item name",
+    alert2: "Enter valid amount"
   },
   mr: {
     title: "खर्च ट्रॅकर",
-    name: "वस्तू नाव",
-    amount: "रक्कम",
+    name: "आयटम नाव टाका",
+    amount: "रक्कम टाका (उदा. 100+200)",
     add: "जोडा",
     total: "एकूण",
-    back: "मागे"
+    back: "मागे जा",
+    alert1: "आयटम नाव टाका",
+    alert2: "योग्य रक्कम टाका"
   },
   hi: {
     title: "खर्च ट्रैकर",
-    name: "वस्तु नाम",
-    amount: "राशि",
+    name: "आइटम नाम दर्ज करें",
+    amount: "राशि दर्ज करें (जैसे 100+200)",
     add: "जोड़ें",
     total: "कुल",
-    back: "वापस"
+    back: "वापस जाएं",
+    alert1: "आइटम नाम दर्ज करें",
+    alert2: "मान्य राशि दर्ज करें"
   }
 };
 
-// ✅ Load selected language
-let lang = localStorage.getItem("lang") || "en";
+// 🔥 language fix
+let currentLang = localStorage.getItem("language") || "en";
 
-let totalAmount = 0;
+// UI update
+function updateUI() {
+  let t = langData[currentLang];
 
-// ✅ Apply language
-function loadLang() {
-  document.getElementById("title").innerText = data[lang].title;
-  document.getElementById("name").placeholder = data[lang].name;
-  document.getElementById("amount").placeholder = data[lang].amount;
-  document.getElementById("addBtn").innerText = data[lang].add;
-  document.getElementById("backBtn").innerText = "⬅ " + data[lang].back;
+  document.getElementById("title").innerText = t.title;
+  document.getElementById("name").placeholder = t.name;
+  document.getElementById("amount").placeholder = t.amount;
+  document.getElementById("addBtn").innerText = t.add;
+  document.getElementById("backBtn").innerText = t.back;
 
-  document.getElementById("total").innerText =
-    data[lang].total + ": ₹" + totalAmount;
+  displayExpenses();
 }
 
-// ✅ Add Expense (supports 200+300)
+// 🔥 SAFE CALCULATION
+function calculateAmount(input) {
+  if (!/^[0-9+ ]+$/.test(input)) return NaN;
+
+  let parts = input.split("+");
+  let total = 0;
+
+  for (let i = 0; i < parts.length; i++) {
+    let num = Number(parts[i].trim());
+    if (isNaN(num)) return NaN;
+    total += num;
+  }
+
+  return total;
+}
+
+// ➕ Add
 function addExpense() {
+  let t = langData[currentLang];
 
-  let name = document.getElementById("name").value;
-  let amountInput = document.getElementById("amount").value;
+  let name = document.getElementById("name").value.trim();
+  let input = document.getElementById("amount").value.trim();
 
-  if (name === "" || amountInput === "") {
-    alert("Enter item and amount");
+  if (name === "") {
+    alert(t.alert1);
     return;
   }
 
-  // handle 200+300
-  let parts = amountInput.split("+");
-  let amount = 0;
-
-  for (let i = 0; i < parts.length; i++) {
-    amount += Number(parts[i]);
+  if (input === "") {
+    alert(t.alert2);
+    return;
   }
 
-  let list = document.getElementById("list");
+  let amount = calculateAmount(input);
 
-  let item = document.createElement("p");
-  item.innerText = name + " - ₹" + amount;
+  if (isNaN(amount) || amount <= 0) {
+    alert(t.alert2);
+    return;
+  }
 
-  list.appendChild(item);
-
-  totalAmount += amount;
-
-  document.getElementById("total").innerText =
-    data[lang].total + ": ₹" + totalAmount;
+  expenses.push({name, amount});
 
   document.getElementById("name").value = "";
   document.getElementById("amount").value = "";
+
+  displayExpenses();
 }
 
-// ✅ Back button
+// 📋 Display
+function displayExpenses() {
+  let t = langData[currentLang];
+
+  let list = document.getElementById("list");
+  list.innerHTML = "";
+
+  let total = 0;
+
+  expenses.forEach(item => {
+    let li = document.createElement("li");
+    li.innerText = item.name + " : ₹" + item.amount;
+    list.appendChild(li);
+
+    total += item.amount;
+  });
+
+  document.getElementById("total").innerText =
+    t.total + ": ₹" + total;
+}
+
+// 🔙 Back
 function goBack() {
   window.location.href = "features.html";
 }
 
-// ✅ Load page
-window.onload = function() {
-  loadLang();
-};
+// INIT
+updateUI();
 
 </script>
 
