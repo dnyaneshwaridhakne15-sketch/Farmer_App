@@ -5,42 +5,41 @@
   <meta charset="UTF-8"> <!-- ✅ IMPORTANT FIX -->
 
   <title>Farmer Marketing App</title>
-
-  <style>
-    body {
-      font-family: Arial;
-      background: #e8f5e9;
-      text-align: center;
-    }
-
-    h2 {
-      color: green;
-    }
-
-    .lang button {
-      margin: 5px;
-      padding: 8px 12px;
-      background: green;
-      color: white;
-      border: none;
-      border-radius: 5px;
-    }
-
-    .container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      padding: 20px;
-    }
-
-    button {
-      padding: 15px;
-      background: #2e7d32;
-      color: white;
-      border: none;
-      border-radius: 8px;
-    }
-  </style>
+\<style>
+  body {
+    font-family: Arial, "Noto Sans Devanagari", sans-serif;
+    text-align: center;
+    background: linear-gradient(to right, #e8f5e9, #c8e6c9);
+  }
+  
+  table {
+    margin: auto;
+    border-collapse: collapse;
+    width: 90%;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  th {
+    background: green;
+    color: white;
+  }
+  
+  td {
+    background: #f9f9f9;
+  }
+  
+  button {
+    padding: 10px 20px;
+    margin-top: 15px;
+    border: none;
+    background: green;
+    color: white;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+</style>
 </head>
 
 <body>
@@ -58,9 +57,12 @@
   <button id="market" onclick="goToPage()">Live Market Price</button>
   <button id="chat" onclick="goToChat()">Farmer Communication</button>
   <button id="pest" onclick="goToPest()">Pest & Disease Scanner</button>
+  
   <button id="expense" onclick="goToExpense()">Expense Tracker</button>
   <button id="crop" onclick="goToCrop()">Crop Information</button>
 </div>
+
+
 
 <script>
 
@@ -101,11 +103,11 @@ function setLang(lang) {
   document.getElementById("crop").textContent = data[lang].crop;
 }
 
-/* Default English */
 window.onload = function() {
-  setLang("en");
-  
+  const savedLang = localStorage.getItem("language") || "en";
+  setLang(savedLang);
 };
+  
 
 /* Navigation */
 function goToPage() {
